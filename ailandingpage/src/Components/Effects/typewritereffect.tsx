@@ -20,7 +20,7 @@ export default function TypewriterEffect ({ text, setWriting }: { text: string, 
             }
         };
         
-        const intervalId = setInterval(typeWord, 200); // Adjust speed here (100ms per letter)
+        const intervalId = setInterval(typeWord, 1); // Adjust speed here (100ms per letter)
 
 
         return () => clearInterval(intervalId);

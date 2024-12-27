@@ -2,25 +2,16 @@
 import React, { useState } from "react";
 import { APIResponse } from "./api/llm";
 import "./home.css";
-import TypewriterEffect from "@/Components/typewritereffect";
-import { BsArrowDown } from "react-icons/bs";
+import TypewriterEffect from "@/Components/Effects/typewritereffect";
+
+import UserInput from "@/Components/Input/userInput";
 
 export default function Home() {
     const [response, setResponse] = useState<string>("");
     const [question, setQuestion] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [writing, setWriting] = useState<boolean>(false);
-    const changeQuestion = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setQuestion(e.target.value);
-    };
-
-    const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        // Shift + Enter does not add a new line
-        if (e.key === "Enter") {
-            e.preventDefault(); // Prevent the default Enter key behavior (which inserts a new line)
-            handleClick(); // Call the submit function
-        }
-    };
+   
 
     const processResponse = (data: APIResponse) => {
         data.answer ? setResponse(data.answer) : setResponse("No answer found");
@@ -55,29 +46,13 @@ export default function Home() {
 
     return (
         <div className="home-container">
-            <div className="llm">
-                <div className="llm-input">
-                    <input
-                        className="llm-input-textarea"
-                        value={question}
-                        onChange={changeQuestion}
-                        onKeyDown={onKeyPress}
-                        disabled={writing}
-                        placeholder="Ask a question..."
-                    />
-                    <button
-                        className="llm-input-button"
-                        onClick={handleClick}
-                        disabled={writing}
-                    >
-                        <BsArrowDown />
-                    </button>
-                </div>
+            <div className="llm">            
                 {loading ? null : (
                     <div className="llm-response">
                         <TypewriterEffect text={response} setWriting={setWriting}/>
                     </div>
                 )}
+                 <UserInput writing={writing} handleSubmit={handleClick} /> 
             </div>
         </div>
     );

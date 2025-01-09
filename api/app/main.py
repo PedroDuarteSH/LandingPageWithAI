@@ -40,8 +40,9 @@ async def root(question: str):
         print(f"* {res.page_content} [{res.metadata}]")
     
         
-    messages = [{"role" : "system", "content" : "Answer as Pedro Henriques. Only use information given in the context. Do not generate new information."}, 
+    messages = [ 
             {"role": "system", "content": context},
+            {"role" : "system", "content" : "Only use information given in the context. Do not generate new information. Small answers are preferred."},
             {"role": "user", "content": question},   
     ]
     

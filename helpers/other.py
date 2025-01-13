@@ -8,7 +8,7 @@ if __name__ == "__main__":
         "faiss_index", embeddings_model, allow_dangerous_deserialization=True
     )
 
-    model_name = "Qwen/Qwen2.5-0.5B-Instruct"
+    model_name = "./model/model"
 
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
@@ -16,10 +16,10 @@ if __name__ == "__main__":
         device_map="auto"
     )
 
-    question = "Who are you?"
+    question = "Where do you currently work?"
 
-
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer_name = "Qwen/Qwen2.5-0.5B-Instruct"
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
 
         
     docs = new_vector_store.similarity_search("qux")
@@ -30,14 +30,14 @@ if __name__ == "__main__":
         k=3
     )
     
-    context = " ".join([res.page_content for res in results])
+    context = "\n".join([res.page_content for res in results])
     for res in results:
         print(f"* {res.page_content} [{res.metadata}]")
     
     
         
-    messages = [{"role" : "system", "content" : "Do not generate new information. Only use information given in the CONTEXT."}, 
-            {"role": "user", "content": "CONTEXT: " + context},
+    messages = [{"role" : "system", "content" : "I am Pedro Henriques. Don't add information not in context."}, 
+            {"role": "assistant", "content": "CONTEXT:\n" + context},
             {"role": "user", "content": question},   
     ]
     
@@ -70,5 +70,5 @@ if __name__ == "__main__":
     print(generated_ids)
     
     response = tokenizer.batch_decode(generated_ids, skip_special_tokens=False)[0]
-
+print("Response:\n")
 print(response)

@@ -53,7 +53,7 @@ if __name__ == "__main__":
     ]
     
     # Use metadata 'index' as ids
-    ids = [doc.metadata["index"] for doc in docs_question]
+    ids = [doc.metadata["index"] for doc in documents]
    
 
     vector_database.add_documents(documents=documents, ids=ids)

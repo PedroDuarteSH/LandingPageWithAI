@@ -8,7 +8,7 @@ from typing import Any, Optional
 @dataclass
 class VectorDatabaseGenerationArguments:
     dataset_path: str = field(
-        default="./data/data.csv", metadata={"help": "Path to the dataset."}
+        default="./data/data_en.csv", metadata={"help": "Path to the dataset."}
     )
     
     embedding_model: str = field(
@@ -57,7 +57,7 @@ class FinetuneArguments:
     )
     tokenized_data: str = field(
         metadata={"help": "Path to the tokenized data."},
-        default="./data/tokenized_data.parquet"
+        default="./data/conversations_tokenized.parquet"
     )
     output_dir: str = field(
         metadata={"help": "Output directory."},

@@ -5,8 +5,8 @@ from transformers import AutoTokenizer
 if __name__ == "__main__":
     model_name = "Qwen/Qwen2.5-0.5B-Instruct"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    language = "pt"
-    file = "data_" + language + ".csv"
+    language = "en"
+    file = "data/data_" + language + ".csv"
     # Open the csv file
     df = pd.read_csv(file, sep=";")
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
                 add_generation_prompt=True
             )
             conversations_df.loc[len(conversations_df)] = {"text": text, "starting_question": questions[i], "labels": label}
-    output_file = "conversations_" + language + ".parquet"
+    output_file = "data/conversations_" + language + ".parquet"
     conversations_df.to_parquet(output_file, index=False)
     
     

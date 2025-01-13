@@ -36,21 +36,17 @@ if __name__ == "__main__":
         index_to_docstore_id={},
     )
     
+    
+    
     documents = [
         Document(
-            page_content=row["answer"],
-            metadata={"index": idx, "question": row["question"]},
+            page_content=row["information"],
+            metadata={"index": idx},
         )
         for idx, row in df.iterrows()
     ]
     
-    docs_question = [
-        Document(
-            page_content=row["question"],
-            metadata={"index": idx, "answer": row["answer"]},
-        )
-        for idx, row in df.iterrows()
-    ]
+  
     
     # Use metadata 'index' as ids
     ids = [doc.metadata["index"] for doc in documents]
@@ -59,6 +55,6 @@ if __name__ == "__main__":
     vector_database.add_documents(documents=documents, ids=ids)
 
 
-    vector_database.save_local("faiss_index")
+    vector_database.save_local("information_index")
 
    

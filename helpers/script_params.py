@@ -8,7 +8,7 @@ from typing import Any, Optional
 @dataclass
 class VectorDatabaseGenerationArguments:
     dataset_path: str = field(
-        default="./data/data_en.csv", metadata={"help": "Path to the dataset."}
+        default="./data/vector.csv", metadata={"help": "Path to the dataset."}
     )
     
     embedding_model: str = field(
@@ -16,7 +16,7 @@ class VectorDatabaseGenerationArguments:
     )
     
     model: str = field(
-        default="Qwen/Qwen2.5-0.5B-Instruct", metadata={"help": "Model to use."}
+        default="HuggingFaceTB/SmolLM2-135M-Instruct", metadata={"help": "Model to use."}
     )
 
 

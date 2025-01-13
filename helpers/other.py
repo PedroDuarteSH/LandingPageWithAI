@@ -5,20 +5,20 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, AutoModelForSequen
 if __name__ == "__main__":
     embeddings_model = HuggingFaceEmbeddings(model_name="Snowflake/snowflake-arctic-embed-xs")
     new_vector_store = FAISS.load_local(
-        "faiss_index", embeddings_model, allow_dangerous_deserialization=True
+        "information_index", embeddings_model, allow_dangerous_deserialization=True
     )
 
-    model_name = "./model/model"
+    model_name = "Qwen/Qwen2.5-0.5B-Instruct-AWQ"
 
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         torch_dtype="auto",
-        device_map="auto"
+        device_map="cpu"
     )
 
-    question = "Where do you currently work?"
+    question = "Tell me about your hobbies?"
 
-    tokenizer_name = "Qwen/Qwen2.5-0.5B-Instruct"
+    tokenizer_name = "Qwen/Qwen2.5-0.5B-Instruct-AWQ"
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
 
         
@@ -43,8 +43,6 @@ if __name__ == "__main__":
     
     
     print(results)
-
-    documents = [{"title":res.metadata["question"], "text":res.page_content} for res in results]
 
 
     

@@ -1,5 +1,10 @@
-fastapi
-transformers
+ngrok==1.3.0
+uvicorn==0.29.0
+fastapi==0.111.0
+loguru==0.7.2
+llamacpp
 torch
 langchain
-langchain_community
+langchain_community @ git+https://github.com/PedroDuarteSH/langchain.git#subdirectory=libs/community
+langchain_huggingface
+python-dotenv

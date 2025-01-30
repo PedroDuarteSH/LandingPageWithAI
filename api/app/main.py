@@ -1,70 +1,77 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from config import EMBEDDINGS_MODEL_NAME, FAISS_INDEX_PATH, MODEL_NAME
-from langchain_huggingface import HuggingFaceEmbeddings
+from config import Settings
 from vector_store.faiss import load_local_faiss_index
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
-
+from llama_cpp import Llama
+from langchain_community.embeddings import LlamaCppEmbeddings
+import os
+from pathlib import Path
+from loguru import logger
+import uvicorn
+import ngrok
 resources = {}
 
 
+
+APPLICATION_PORT = 5000
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    settings = Settings()
     # Load the ML model
-    resources["embedding_model"] = HuggingFaceEmbeddings(model_name = EMBEDDINGS_MODEL_NAME)
-    resources["vector_store"] = load_local_faiss_index(index_path=FAISS_INDEX_PATH, embeddings_model=resources["embedding_model"])
-    resources["model"] =  AutoModelForCausalLM.from_pretrained(MODEL_NAME, torch_dtype="auto", device_map="auto")
-    resources["tokenizer"] = AutoTokenizer.from_pretrained(MODEL_NAME)
+    #ngrok.set_auth_token(NGROK_AUTH_TOKEN)
+    ngrok.forward(addr=APPLICATION_PORT, labels=NGROK_EDGE, proto="labeled")
+    
+    
+    
+    resources["embedding_model"] = LlamaCppEmbeddings(repo_id=settings.embeddings_model_name, filename=settings.embeddings_file_name)
+    resources["vector_store"] = load_local_faiss_index(index_path=settings.faiss_index_path, embeddings_model=resources["embedding_model"])
+    if os.path.exists(settings.model_name):
+        resources["model"] = Llama(model_path=settings.model_name)
+    else:
+        resources["model"] = Llama.from_pretrained(
+            repo_id=settings.model_name,
+            filename=settings.model_file_name,
+            verbose=False
+        )
     
     yield
     # Clean up the ML models and release the resources
+    logger.info("Tearing Down Ngrok Tunnel")
+    ngrok.disconnect()
+    logger.info("Clearing Models in Use")
     resources.clear()
 
 
 app = FastAPI(lifespan=lifespan)
 
+
+
 @app.post("/")
 async def root(question: str):
     new_vector_store = resources["vector_store"]
     model = resources["model"]
-    tokenizer = resources["tokenizer"]
         
-    results = new_vector_store.similarity_search(
+    results = new_vector_store.similarity_search_with_relevance_scores(
         question,
-        k=3
+        k=3,
     )
+    print(results)
     
-    context = " ".join([res.page_content for res in results])
-    for res in results:
-        print(f"* {res.page_content} [{res.metadata}]")
     
+    context = "\n".join([res[0].page_content for res in results])
+    print(context)
         
-    messages = [ 
-            {"role": "system", "content": context},
-            {"role" : "system", "content" : "Only use information given in the context. Do not generate new information. Small answers are preferred."},
-            {"role": "user", "content": question},   
+    messages = [
+        {"role": "system", "content": "I am Pedro Henriques. Ask me anything."},
+        {"role" : "system", "content" : "Only use information given in the context. Do not generate new information. Small answers are preferred."},
+        {"role" : "context", "content" : "CONTEXT:\n" + context},
+        {"role": "user", "content": question}
     ]
     
+    output = model.create_chat_completion(messages)["choices"][0]["message"]
     
     
-    text = tokenizer.apply_chat_template(
-        messages,
-        tokenize=False,
-        add_generation_prompt=True
-    )
-    model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
-
-    generated_ids = model.generate(
-        **model_inputs,
-        max_new_tokens=512
-    )
-    generated_ids = [
-        output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
-    ]
-
-    response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-    return {"message": response}
+    return {"message": output, "context" : context}
 
 
 
@@ -83,3 +90,8 @@ async def new_message(session_id: str, message: str):
 async def delete_conversation(session_id: str):
 
     return {"message": "Conversation deleted"}
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=APPLICATION_PORT, reload=True)
+    

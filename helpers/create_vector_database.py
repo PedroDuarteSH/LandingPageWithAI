@@ -1,37 +1,33 @@
-from transformers import HfArgumentParser
+from llama_cpp import Llama
 from script_params import VectorDatabaseGenerationArguments
-
 import faiss
 from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain.docstore.document import Document
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import LlamaCppEmbeddings
 
 import pandas as pd
-import os
-from pathlib import Path
 
 
-def get_embedding_size(embeddings_model: HuggingFaceEmbeddings) -> int:
-    """Get the size of the embeddings."""
-    return embeddings_model._client.get_sentence_embedding_dimension()
+
 
 
 if __name__ == "__main__":
-    parser = HfArgumentParser([VectorDatabaseGenerationArguments])
-    datapipeline_args: VectorDatabaseGenerationArguments = parser.parse_args_into_dataclasses()[0]
+    #parser = HfArgumentParser([VectorDatabaseGenerationArguments])
+    #datapipeline_args: VectorDatabaseGenerationArguments = parser.parse_args_into_dataclasses()[0]
+    datapipeline_args = VectorDatabaseGenerationArguments(dataset_path="data/vector.csv")
+    embedder = LlamaCppEmbeddings(repo_id="ChristianAzinn/snowflake-arctic-embed-xs-GGUF", verbose=False, filename="snowflake-arctic-embed-xs--Q4_K_S.GGUF", embedding = True)
+
     
-    embeddings_model = HuggingFaceEmbeddings(model_name = datapipeline_args.embedding_model)
-    
+ 
     # Load dataset
     df = pd.read_csv(datapipeline_args.dataset_path, sep=";")
 
 
     # Create vector database
     vector_database = FAISS(
-        embedding_function=embeddings_model,
-        index=faiss.IndexFlatIP(get_embedding_size(embeddings_model)),
+        embedding_function=embedder,
+        index=faiss.IndexFlatIP(len(embedder.embed_query("test"))),
         docstore=InMemoryDocstore(),
         index_to_docstore_id={},
     )
@@ -53,7 +49,6 @@ if __name__ == "__main__":
    
 
     vector_database.add_documents(documents=documents, ids=ids)
-
 
     vector_database.save_local("information_index")
 

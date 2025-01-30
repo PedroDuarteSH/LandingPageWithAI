@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 from loguru import logger
 import uvicorn
-import ngrok
+#import ngrok
 resources = {}
 
 
@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI):
     settings = Settings()
     # Load the ML model
     #ngrok.set_auth_token(NGROK_AUTH_TOKEN)
-    ngrok.forward(addr=APPLICATION_PORT, labels=NGROK_EDGE, proto="labeled")
+    #ngrok.forward(addr=APPLICATION_PORT, labels=NGROK_EDGE, proto="labeled")
     
     
     
@@ -37,7 +37,7 @@ async def lifespan(app: FastAPI):
     yield
     # Clean up the ML models and release the resources
     logger.info("Tearing Down Ngrok Tunnel")
-    ngrok.disconnect()
+    #ngrok.disconnect()
     logger.info("Clearing Models in Use")
     resources.clear()
 

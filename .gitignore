@@ -1,2 +1,3 @@
 /AICVPageVENV
 .env
+__pycache__/

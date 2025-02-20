@@ -1,9 +1,11 @@
 .llm-input{
     width: 100%;
     display: flex;
-    border-radius: 30px;
+    border-radius: 0px 0px 30px 30px;
     padding: 12px;
     box-sizing: border-box;
+    background-color: #99a1acee;
+    border-top: 3px solid #222831;
 }
 
 .llm-input-textarea {
@@ -19,22 +21,18 @@
 }
 
 .llm-input-button{
-    background-color: transparent; 
-    border: none;
     display: flex; 
     align-items: center; /* Center the icon vertically */
     justify-content: center; /* Center the icon horizontally */
     text-align: center;
     align-self: center;
-    width: 40px; /* Set the desired button width (can be adjusted) */
-    height: 40px; /* Set the desired button height (can be adjusted) */
-    margin-left: 20px;
-    border-radius: 50%;
+    width: 50px; /* Set the desired button width (can be adjusted) */
+    height: 50px; /* Set the desired button height (can be adjusted) */
+    border-radius: 30px;
     background-color: #f96d00;
     opacity: 1;
-    font-size: 25px;
     transition: opacity 0.3s, border 0.3s;
-    border: 1px solid #f96d00;
+    margin-left: 20px;
 }
 
 .llm-input-button:hover{

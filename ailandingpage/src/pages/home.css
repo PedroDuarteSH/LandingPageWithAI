@@ -1,34 +1,12 @@
-.home-container{
-    position: relative;
+.home-container {
     display: flex;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-}
-
-.llm{
-    display: flex;
-    flex-direction: column-reverse;
-    min-height: 40%;
-    max-height: 80%;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 1300px;
     width: 80%;
-    max-width: 1000px;
-    justify-content: flex-end;
-    color: #222831;
-    font-family: 'Roboto', sans-serif;
-    padding: 12px;
-    background-color: #222831ee;
+    min-height: 0;
     border-radius: 30px;
-    border: 1px solid #111;
-    overflow-y: auto;
-    flex-flow: column nowrap;
+    flex: 0 1 100%;
+
 }
 
-
-
-.message{
-    border-radius: 15px;
-    color: #EEEEEE;
-    background-color: #31363F;
-}

@@ -10,7 +10,7 @@ export default function Page() {
         <div className="background-image-container">
           <Image
             className="background-image-audi"
-            src={"/assets/images/bk/A3.png"}
+            src={"/nextjs-github-pages/assets/images/bk/A3.png"}
             alt="AudiBackground"
             sizes="(orientation: portrait) 100vw, (orientation: landscape) 100vh"
             fill
@@ -21,7 +21,7 @@ export default function Page() {
         <div className="background-image-container">
           <Image
             className="background-image-code"
-            src={"/assets/images/bk/Code.jpg"}
+            src={"/nextjs-github-pages/assets/images/bk/Code.jpg"}
             alt="CodeBackground"
             sizes="(orientation: portrait) 100vw, (orientation: landscape) 100vh"
             fill

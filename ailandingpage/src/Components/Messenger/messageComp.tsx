@@ -9,7 +9,7 @@ export default function MessageComp({ message }: { message: Message }) {
     const image = message.role === "user" ? (
         <Image
             className="icon"
-            src={"/assets/icons/user-icon.svg"}
+            src={"/nextjs-github-pages/assets/icons/user-icon.svg"}
             alt="User-icon"
             width={50}
             height={50}
@@ -17,7 +17,7 @@ export default function MessageComp({ message }: { message: Message }) {
     ) : (
         <Image
             className="icon"
-            src={"/assets/icons/ai-icon.svg"}
+            src={"/nextjs-github-pages/assets/icons/ai-icon.svg"}
             alt="AI-icon"
             width={50}
             height={50}

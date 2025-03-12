@@ -22,8 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const newContent = chunk.choices[0].delta.content;
                 console.log(newContent)
                 res.write(newContent);
-               
-               
+                
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 //(res as any).flush();
             }

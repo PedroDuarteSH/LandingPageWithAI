@@ -36,12 +36,12 @@ export default function UserInput({ modelGenerating, handleSubmit }: { modelGene
                 onClick={resetAndSubmit}
             >
                 {(!modelGenerating) ? <Image
-                    src={"/nextjs-github-pages/assets/icons/send-icon.svg"}
+                    src={"/assets/icons/send-icon.svg"}
                     alt="Git Hub logo"
                     width={30}
                     height={30}
                 /> : <Image
-                    src={"/nextjs-github-pages/assets/icons/stop-icon.svg"}
+                    src={"/assets/icons/stop-icon.svg"}
                     alt="Stop-icon"
                     width={30}
                     height={30}

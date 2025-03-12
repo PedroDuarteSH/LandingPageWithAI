@@ -22,6 +22,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const newContent = chunk.choices[0].delta.content;
                 console.log(newContent)
                 res.write(newContent);
+               
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                if (res && typeof (res as any).flush === 'function') {
+                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (res as any).flush();
+                } else {
+                    console.error("t.flush is not a function", res);
+                }
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (res as any).flush();
             }
